@@ -8,6 +8,7 @@ class DiscountAdmin(admin.ModelAdmin):
     list_display = ['product', 'discount_percentage', 'start_date', 'end_date']
     list_filter = ['start_date', 'end_date']
     ordering = ['-start_date',]
+    
     def save_model(self, request, obj, form, change):
    
         super().save_model(request, obj, form, change)

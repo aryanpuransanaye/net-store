@@ -5,7 +5,8 @@ class Customer(models.Model):
 
     CHOISES = [
         ('active', 'Active'), 
-        ('inactive', 'Inactive')]
+        ('inactive', 'Inactive')
+        ]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=15, unique=True)
