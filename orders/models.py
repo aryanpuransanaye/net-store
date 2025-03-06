@@ -1,6 +1,4 @@
 from django.db import models
-from customers.models import Customer
-from products.models import Product
 
 
 class Order(models.Model):
@@ -10,7 +8,7 @@ class Order(models.Model):
         ("Shipped", "Shipped"), 
         ("Delivered", "Delivered")]
 
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey('customers.Customer', on_delete=models.CASCADE)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length = 20, choices = CHOICES)
@@ -21,7 +19,8 @@ class Order(models.Model):
 class OrderItem(models.Model):
 
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey('products.Product', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='order_item_image/', null=True, blank=True)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
 

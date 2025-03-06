@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User 
 
+
 class Customer(models.Model):
 
     CHOISES = [
@@ -28,3 +29,13 @@ class Address(models.Model):
 
     def __str__(self):
         return f'{self.city} - {self.state} - {self.postal_code}'
+
+
+class Wishlist(models.Model):
+
+    customer = models.OneToOneField(Customer, on_delete=models.CASCADE)
+    product = models.ManyToManyField('products.Product')
+    creat_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Wishlist of {self.customer.user.username}"
