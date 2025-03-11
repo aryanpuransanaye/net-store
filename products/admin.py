@@ -50,7 +50,7 @@ class TagAdmin(admin.ModelAdmin):
     ordering = ['-name',]
 
     def get_products(self, obj):
-        return ", ".join([product.name for product in obj.product.all()])  # نمایش نام محصولات
+        return ", ".join([product.name for product in obj.product.all()]) 
     get_products.short_description = 'Products'
 
 
