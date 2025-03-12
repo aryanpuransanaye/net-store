@@ -8,7 +8,7 @@ from products.models import Product
 def address_list(request):
     customer = request.user.customer
     addresses = Address.objects.filter(customer = customer)
-    return render(request, 'customers/address_list.html', {'addresses': addresses})
+    return render(request, 'customers/address_forms.html', {'addresses': addresses})
 
 
 def address_create(request):
@@ -20,7 +20,7 @@ def address_create(request):
             return redirect('address-list')
     else:
         form = AddressForm()
-    return render(request, 'address_form.html', {'form': form})
+    return render(request, 'customers/address_forms.html', {'form': form})
 
 
 def edit_address(request, address_id):
@@ -59,9 +59,16 @@ def delete_address(request, address_id):
 
 
 def wishlist_list(request):
-    customer = request.user.customer  
-    wishlist = Wishlist.objects.get(customer=customer)
-    return render(request, 'wishlist_list.html', {'wishlist': wishlist})
+    
+    customer = request.user.customer
+
+    try: 
+        wishlist = Wishlist.objects.get(customer=customer)
+    except Wishlist.DoesNotExist:
+        wishlist = None
+
+    return render(request, 'customers/wishlist_list.html', {'wishlist': wishlist})
+
 
 
 def wishlist_add(request, product_id):
@@ -69,4 +76,12 @@ def wishlist_add(request, product_id):
     product = Product.objects.get(id=product_id)
     wishlist, created = Wishlist.objects.get_or_create(customer=customer)
     wishlist.product.add(product)
-    return redirect('wishlist-list')
+    return redirect('customers:wishlist-list')
+
+
+def product_select(request):
+    customer = request.user.customer
+    all_products = Product.objects.all()
+    return render(request, 'customers/product_select.html', {'products': all_products})
+
+

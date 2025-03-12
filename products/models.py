@@ -9,6 +9,7 @@ class Category(models.Model):
     description = models.TextField(blank = True, null = True)
     image = models.ImageField(upload_to = 'categories_image/', null = True, blank = True)
     created_at = models.DateTimeField(auto_now_add = True)
+    
 
     def __str__(self):
         return self.name

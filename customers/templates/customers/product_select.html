@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Select Product for Wishlist</h2>
+    <ul class="list-group mt-3">
+        {% for product in products %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ product.name }} <strong>{{ product.price }} 💲</strong>
+                
+                <a href="{% url 'customers:wishlist-add' product.id %}" class="btn btn-secondary">Add to Wishlist</a>
+            </li>
+        {% empty %}
+            <li class="list-group-item text-center text-muted">There is no Product</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'customers:wishlist-list' %}" class="btn btn-secondary mt-3">Back to Wishlist</a>
+</div>
+{% endblock %}

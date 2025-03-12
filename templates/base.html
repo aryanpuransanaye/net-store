@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Net Store{% endblock %}</title>
+
+   
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ 
+    <style>
+       
+        .navbar {
+            background-color: #252525;
+        }
+        .navbar .nav-link {
+            color: white !important;
+        }
+        .navbar .nav-link:hover {
+            color: #f8f9fa !important;
+        }
+
+    
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: -260px;
+            width: 250px;
+            height: 100vh;
+            background: #252525 !important;
+            color: white;
+            padding: 20px;
+            transition: left 0.3s ease-in-out;
+            overflow-y: auto;
+            z-index: 2000;
+        }
+        #sidebar.active {
+            left: 0;
+        }
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-header h4 {
+            margin: 0;
+        }
+        #close-menu {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+        }
+        .sidebar-link {
+            display: block;
+            padding: 10px;
+            color: white;
+            text-decoration: none;
+        }
+        .sidebar-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        
+        .content {
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+       
+        .product-card {
+            border-radius: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+    <div class="container">
+        <button class="btn btn-outline-light me-3" id="menu-toggle">
+            ☰
+        </button>
+        <a class="navbar-brand fw-bold" href="{% url 'products:home' %}">🛒 Net Store</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'customers:address-forms' %}"><i class="fas fa-map-marker-alt"></i> Addresses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'customers:wishlist-list' %}"><i class="fas fa-heart"></i> Wishlist</a></li>
+                    <li class="nav-item"><a class="nav-link text-danger fw-bold" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link text-success fw-bold" href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div id="sidebar">
+    <div class="sidebar-header">
+        <h4>📂 Filters</h4>
+        <button id="close-menu">&times;</button>
+    </div>
+    <hr>
+    <h5>🏷️ Brands</h5>
+    <ul>
+        {% for brand in brands %}
+            <li><a href="{% url 'products:product-by-brand' brand.id %}" class="sidebar-link">{{ brand.name }}</a></li>
+        {% empty %}
+            <li>No brands found.</li>
+        {% endfor %}
+    </ul>
+    <h5>📦 Categories</h5>
+    <ul>
+        {% for category in categories %}
+            <li><a href="{% url 'products:product-by-category' category.id %}" class="sidebar-link">{{ category.name }}</a></li>
+        {% empty %}
+            <li>No categories found.</li>
+        {% endfor %}
+    </ul>
+    <h5>🏷️ Tags</h5>
+    <ul>
+        {% for tag in tags %}
+            <li><a href="{% url 'products:product-by-tag' tag.id %}" class="sidebar-link">{{ tag.name }}</a></li>
+        {% empty %}
+            <li>No tags found.</li>
+        {% endfor %}
+    </ul>
+</div>
+<div id="overlay"></div>
+
+
+<div class="content">
+    {% block content %}{% endblock %}
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var menuToggle = document.getElementById("menu-toggle");
+    var sidebar = document.getElementById("sidebar");
+    var closeMenu = document.getElementById("close-menu");
+    var overlay = document.getElementById("overlay");
+
+    menuToggle.addEventListener("click", function () {
+        sidebar.classList.add("active");
+        overlay.style.display = "block";
+    });
+
+    closeMenu.addEventListener("click", function () {
+        sidebar.classList.remove("active");
+        overlay.style.display = "none";
+    });
+
+    overlay.addEventListener("click", function () {
+        sidebar.classList.remove("active");
+        overlay.style.display = "none";
+    });
+});
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>لیست علاقه‌مندی‌ها</h2>
+    <ul class="list-group mt-3">
+        {% for product in wishlist.product.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ product.name }} - <strong>{{ product.price }} 💲</strong>
+            </li>
+        {% empty %}
+            <li class="list-group-item text-center text-muted">Your list is Empty</li>
+        {% endfor %}
+    </ul>
+
+
+    <a href="{% url 'customers:product-select' %}" class="btn btn-secondary mt-3">Add to Wishlsit</a>
+
+    <a href="{% url 'products:home' %}" class="btn btn-secondary mt-3">Back to Home</a>
+</div>
+{% endblock %}
