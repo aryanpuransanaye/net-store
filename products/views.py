@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product, Brand, Category, Tag
+from .models import Product, Brand, Category, Tag, Review
 
 def home(request):
     products = Product.objects.all()
@@ -20,6 +20,13 @@ def product_detail(request, product_id):
     product = get_object_or_404(Product, id = product_id)
     return render(request, 'products/product_detail.html', {'product': product})
 
+def product_review(request, product_id):
+
+    product = get_object_or_404(Product, id = product_id)
+    reviews = Review.objects.filter(product = product)
+
+    return render(request, 'products/review_list.html', {'product': product, 'reviews': reviews})
+
 def product_by_brand(request, brand_id):
 
     brand = get_object_or_404(Brand, id = brand_id) 
@@ -31,7 +38,7 @@ def product_by_brand(request, brand_id):
         'products': products,
         'brands': brands,
         'categories': categories,
-        'tags': tags
+        'tags': tags 
     })
 
 def product_by_category(request, category_id):

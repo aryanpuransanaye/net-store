@@ -22,7 +22,8 @@
             
             <p>Stock: {% if product.stock > 0 %} <span class="text-success">In Stock</span> {% else %} <span class="text-danger">Out of Stuck</span> {% endif %}</p>
             
-            <a href="#" class="btn btn-primary mt-3">Add to Cart</a>
+            <a href="#" class="btn btn-primary mt-3">Add to Cart</a> 
+            <a href="{% url 'products:product-review' product.id %}" class="btn btn-primary mt-3">View Reviews</a>
         </div>
     </div>
 </div>
