@@ -59,7 +59,7 @@ class Product(models.Model):
 
 class Tag(models.Model):
 
-    name = models.CharField(max_length=255, unique=True, null = False, blank = False)
+    name = models.CharField(max_length=255, null = False, blank = False)
     product = models.ManyToManyField(Product)  
     created_at = models.DateTimeField(auto_now_add = True)
 

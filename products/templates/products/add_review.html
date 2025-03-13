@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded-4 border-0">
+        <h2 class="text-center text-primary mb-4">
+            📝 Write a Review for <strong class="text-dark">{{ product.name }}</strong>
+        </h2>
+
+        <form method="post" class="mt-3">
+            {% csrf_token %}
+
+            <div class="mb-4">
+                <label class="form-label fw-bold text-secondary">⭐ Rating (1-5)</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light">🌟</span>
+                    {{ form.rating }}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold text-secondary">📝 Your Review</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light">✍️</span>
+                    {{ form.comment }}
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'products:product-detail' product.id %}" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+                <button type="submit" class="btn btn-success px-4 py-2 rounded-pill shadow-sm">
+                    <i class="fas fa-paper-plane"></i> Submit Review
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .input-group-text {
+        border-radius: 10px 0 0 10px;
+        font-size: 1.2rem;
+    }
+    .input-group input, .input-group textarea {
+        border-radius: 0 10px 10px 0;
+    }
+    .btn:hover {
+        transform: scale(1.05);
+        transition: 0.3s;
+    }
+</style>
+{% endblock %}

@@ -70,6 +70,19 @@ def wishlist_list(request):
     return render(request, 'customers/wishlist_list.html', {'wishlist': wishlist})
 
 
+def remove_from_wishlist(request, product_id):
+
+    product = get_object_or_404(Product, id=product_id)
+    wishlist, created = Wishlist.objects.get_or_create(customer=request.user.customer)
+    
+    if product in wishlist.product.all():
+        wishlist.product.remove(product)
+        messages.success(request, f"✅ {product.name} removed from your wishlist.")
+    
+    return redirect('customers:wishlist-list')
+
+
+
 
 def wishlist_add(request, product_id):
     customer = request.user.customer

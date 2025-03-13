@@ -24,6 +24,7 @@
             
             <a href="#" class="btn btn-primary mt-3">Add to Cart</a> 
             <a href="{% url 'products:product-review' product.id %}" class="btn btn-primary mt-3">View Reviews</a>
+            <a href="{% url 'customers:wishlist-add' product.id %}" class="btn btn-primary mt-3">Add to Wishlist</a>
         </div>
     </div>
 </div>

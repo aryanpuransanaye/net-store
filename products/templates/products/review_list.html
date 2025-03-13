@@ -5,8 +5,10 @@
     <h3 class="fw-bold text-primary">📢 Product Reviews ({{ reviews.count }})</h3>
 
     
-    <a href="" class="btn btn-success mt-3 mb-4">📝 Add Review</a>
-
+    <a href="{% url 'products:add-product-review' product.id %}" class="btn btn-success mt-3 mb-4">
+        📝 Add Review
+    </a>
+    
     {% if reviews %}
         <ul class="list-group mt-3">
             {% for review in reviews %}

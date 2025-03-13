@@ -1,5 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from .models import Product, Brand, Category, Tag, Review
+from .forms import ReviewForms
+from customers.models import Customer
 
 def home(request):
     products = Product.objects.all()
@@ -26,6 +30,30 @@ def product_review(request, product_id):
     reviews = Review.objects.filter(product = product)
 
     return render(request, 'products/review_list.html', {'product': product, 'reviews': reviews})
+
+
+@login_required
+def add_product_review(request, product_id):
+    
+    product = get_object_or_404(Product, id = product_id)
+    customer = get_object_or_404(Customer, user=request.user)
+
+    if request.method == 'POST':
+        form = ReviewForms(request.POST)
+        if form.is_valid():
+            review = form.save(commit = False)
+            review.product = product
+            review.user = customer
+            review.save()
+            messages.success(request, "Your review has been added successfully!")
+            return redirect('products:product-detail', product_id=product.id)
+        else:
+            messages.error(request, "There was an error submitting your review.")
+    else:
+        form = ReviewForms()
+
+    return render(request, "products/add_review.html", {"form": form, "product": product})
+
 
 def product_by_brand(request, brand_id):
 
