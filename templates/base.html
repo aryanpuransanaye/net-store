@@ -93,7 +93,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'customers:address-forms' %}"><i class="fas fa-map-marker-alt"></i> Addresses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'customers:address-list' %}"><i class="fas fa-map-marker-alt"></i> Addresses</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'customers:wishlist-list' %}"><i class="fas fa-heart"></i> Wishlist</a></li>
                     <li class="nav-item"><a class="nav-link text-danger fw-bold" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 {% else %}
@@ -124,14 +124,6 @@
             <li><a href="{% url 'products:product-by-category' category.id %}" class="sidebar-link">{{ category.name }}</a></li>
         {% empty %}
             <li>No categories found.</li>
-        {% endfor %}
-    </ul>
-    <h5>🏷️ Tags</h5>
-    <ul>
-        {% for tag in tags %}
-            <li><a href="{% url 'products:product-by-tag' tag.id %}" class="sidebar-link">{{ tag.name }}</a></li>
-        {% empty %}
-            <li>No tags found.</li>
         {% endfor %}
     </ul>
 </div>

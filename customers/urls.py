@@ -4,7 +4,7 @@ from .views import address_list, address_create, edit_address, delete_address, w
 app_name = 'customers'
 
 urlpatterns = [
-    path('address-forms/', address_list, name='address-forms'),
+    path('address-list/', address_list, name='address-list'),
     path('address-create/', address_create, name='address-create'),
     path('edit-address/<int:address_id>/', edit_address, name='edit-address'),
     path('delete-address/<int:address_id>/', delete_address, name='delete-address'),

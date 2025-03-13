@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Add New Address</h2>
+
+    <form method="post" class="card p-4 shadow-sm mt-3">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success mt-2">Save Address</button>
+    </form>
+
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{% url 'customers:address-list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Addresses List
+        </a>
+        <a href="{% url 'products:home' %}" class="btn btn-secondary">
+            <i class="fas fa-home"></i> Back to Home
+        </a>
+    </div>
+</div>
+{% endblock %}
