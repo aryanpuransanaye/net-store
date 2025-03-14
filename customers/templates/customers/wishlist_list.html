@@ -10,8 +10,8 @@
                 {% for product in wishlist.product.all %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="d-flex flex-column">
-                            <a href="{% url 'products:product-detail' product.id %}" class="fw-bold">{{ product.name }}</a>
-                            <span class="text-muted">{{ product.price }} 💲</span>
+                            <a href="{% url 'products:product-detail' product.id %}" class="fw-bold text-decoration-none">{{ product.name }}</a>
+                            <span class="text-muted mt-1">{{ product.price }} 💲</span>
                         </div>
                         <form method="post" action="{% url 'customers:remove-from-wishlist' product.id %}" class="d-inline">
                             {% csrf_token %}

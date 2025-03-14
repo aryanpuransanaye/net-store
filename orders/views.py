@@ -1,41 +1,54 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Order
-from .forms import Orderitemfroms
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from .models import Order, OrderItem
+from products.models import Product
 
-def customer_order_list(request):
-
-    customer = request.user.customer
-    orders = Order.objects.filter(customer = customer)
+def customer_orders(request):
     
-    return render(request, 'orders/customer_order_list.html', {'orders': orders})
+    customer = request.user.customer
+    orders = Order.objects.filter(customer=customer)
 
-def add_order_item(request, id):
+    return render(request, 'orders/cart_detail.html', {'orders': orders})
 
-    order = get_object_or_404(Order, id=id)
 
-    if request.method == 'POST':
-        form = Orderitemfroms(request.POST)
-        if form.is_valid():
-            order_item = form.save(commit=False)
-            order_item.order = order
-            order_item.save()
-            return redirect('order-list')
-        else:
-            form = Orderitemfroms(request.POST)
-
-    return render(request, 'orders/add_order_item.html', {'form': form})
-
-def delete_order(request, id):
-
-    order = get_object_or_404(Order, id=id, customer = request.user.customer)
-
-    if order.status == 'pending':
-        order.delete()
-
-    return redirect('customer_order-list')
-
-def order_detail(request, id):
-
-    order = get_object_or_404(Order, id=id, customer = request.user.customer)
+def order_detail(request, order_id):
+    
+    order = get_object_or_404(Order, id=order_id, customer=request.user.customer)
     
     return render(request, 'orders/order_detail.html', {'order': order})
+
+
+def add_to_cart(request, product_id):
+    
+    if not request.user.is_authenticated:
+        messages.error(request, "you need to login first.")
+        return redirect('accounts:login')  
+
+  
+    product = get_object_or_404(Product, id=product_id)
+
+
+    customer = request.user.customer
+    order, created = Order.objects.get_or_create(
+        customer=customer,
+        status="Pending"
+    )
+
+    order_item, created = OrderItem.objects.get_or_create(
+        order=order,
+        product=product,
+        defaults={'quantity': 1, 'price': product.price}
+    )
+
+    if not created:
+        
+        order_item.quantity += 1
+        order_item.save()
+
+    
+    order.total_price = sum(item.quantity * item.price for item in order.items.all())
+    order.save()
+
+    messages.success(request, f"{product.name} به سبد خرید شما اضافه شد.")
+    
+    return redirect('orders:order-detail', order_id=order.id) 

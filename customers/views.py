@@ -3,6 +3,7 @@ from django.contrib import messages
 from .models import Address, Wishlist
 from .forms import AddressForm
 from products.models import Product
+from orders.models import Order, OrderItem
 
 
 def address_list(request):
@@ -72,9 +73,8 @@ def remove_from_wishlist(request, product_id):
     return redirect('customers:wishlist-list')
 
 
-
-
 def wishlist_add(request, product_id):
+
     customer = request.user.customer
     product = Product.objects.get(id=product_id)
     wishlist, created = Wishlist.objects.get_or_create(customer=customer)
@@ -83,8 +83,7 @@ def wishlist_add(request, product_id):
 
 
 def product_select(request):
-    customer = request.user.customer
+
     all_products = Product.objects.all()
     return render(request, 'customers/product_select.html', {'products': all_products})
-
 

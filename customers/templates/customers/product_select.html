@@ -1,19 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Select Product for Wishlist</h2>
-    <ul class="list-group mt-3">
-        {% for product in products %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ product.name }} <strong>{{ product.price }} 💲</strong>
-                
-                <a href="{% url 'customers:wishlist-add' product.id %}" class="btn btn-secondary">Add to Wishlist</a>
-            </li>
-        {% empty %}
-            <li class="list-group-item text-center text-muted">There is no Product</li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'customers:wishlist-list' %}" class="btn btn-secondary mt-3">Back to Wishlist</a>
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center text-primary mb-4">✨ Select Product for Wishlist</h2>
+
+        <ul class="list-group">
+            {% for product in products %}
+                <li class="list-group-item d-flex justify-content-between align-items-center shadow-sm rounded mb-3">
+                    <div class="d-flex justify-content-between w-100">
+                       <a href="{% url 'products:product-detail' product.id %}" class="fw-bold text-decoration-none">
+                            {{ product.name }}
+                        </a>
+                        
+                        <span class="fw-bold">{{ product.price }} 💲</span>
+                    </div>
+
+                    <!-- دکمه افزودن به لیست علاقمندی -->
+                    <a href="{% url 'customers:wishlist-add' product.id %}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-heart"></i> Add to Wishlist
+                    </a>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-center text-muted">There are no products available.</li>
+            {% endfor %}
+        </ul>
+
+        <div class="d-flex justify-content-center mt-4">
+            <a href="{% url 'customers:wishlist-list' %}" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-arrow-left"></i> Back to Wishlist
+            </a>
+        </div>
+    </div>
 </div>
+
 {% endblock %}

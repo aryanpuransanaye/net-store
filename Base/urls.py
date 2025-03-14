@@ -10,6 +10,7 @@ urlpatterns = [
     path('customers/', include('customers.urls')),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('home/', include('products.urls')),
+    path('cart/', include('orders.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

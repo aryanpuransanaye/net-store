@@ -14,10 +14,10 @@
                             <p class="mb-1 text-muted">{{ address.street }}, {{ address.postal_code }}</p>
                         </div>
                         <div>
-                            <a href="{% url 'customers:edit-address' address.id %}" class="btn btn-outline-warning btn-sm mr-2">
+                            <a href="{% url 'customers:edit-address' address.id %}" class="btn btn-sm btn-warning">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
-                            <a href="{% url 'customers:delete-address' address.id %}" class="btn btn-outline-danger btn-sm">
+                            <a href="{% url 'customers:delete-address' address.id %}" class="btn btn-sm btn-danger">
                                 <i class="fas fa-trash-alt"></i> Delete
                             </a>
                         </div>
