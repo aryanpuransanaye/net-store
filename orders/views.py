@@ -49,6 +49,6 @@ def add_to_cart(request, product_id):
     order.total_price = sum(item.quantity * item.price for item in order.items.all())
     order.save()
 
-    messages.success(request, f"{product.name} به سبد خرید شما اضافه شد.")
+    messages.success(request, f"{product.name} Added to cart")
     
     return redirect('orders:order-detail', order_id=order.id) 
