@@ -32,36 +32,65 @@
     <h2 class="text-center mb-4 fw-bold">🔥 Our Products</h2>
 
 
-    <div class="card mb-4 shadow-sm p-3">
-        <form method="GET" action="{% url 'products:sort-by' %}">
-            <div class="row">
-           
-                <div class="col-6 mb-2">
-                    <label for="price" class="form-label fs-6">💲 Price</label>
-                    <select name="price" id="price" class="form-select form-select-sm">
-                        <option value="">All Prices</option>
-                        <option value="asc" {% if request.GET.price == 'asc' %}selected{% endif %}>Low to High</option>
-                        <option value="desc" {% if request.GET.price == 'desc' %}selected{% endif %}>High to Low</option>
-                    </select>
-                </div>
-  
-                <div class="col-6 mb-2">
-                    <label for="rating" class="form-label fs-6">⭐ Rating</label>
-                    <select name="rating" id="rating" class="form-select form-select-sm">
-                        <option value="">All Ratings</option>
-                        <option value="asc" {% if request.GET.rating == 'asc' %}selected{% endif %}>Low to High</option>
-                        <option value="desc" {% if request.GET.rating == 'desc' %}selected{% endif %}>High to Low</option>
-                    </select>
-                </div>
+    <div class="card mb-4 shadow-sm p-4">
+        <form method="GET" action="{% url 'products:sort-by' %}" class="row g-3">
+            
+            <div class="col-md-3">
+                <label for="category" class="form-label">📂 Select Category</label>
+                <select name="category" id="category" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if category.id|stringformat:"s" == selected_category %}selected{% endif %}>
+                            {% if category.image %}
+                                <img src="{{ category.image.url }}" alt="{{ category.name }}" style="width: 20px; height: 20px; margin-right: 5px;">
+                            {% endif %}
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+    
+            <div class="col-md-3">
+                <label for="brand" class="form-label">🏷️ Select Brand</label>
+                <select name="brand" id="brand" class="form-select" onchange="this.form.submit()">
+                    <option value="">All Brands</option>
+                    {% for brand in brands %}
+                        <option value="{{ brand.id }}" {% if brand.id|stringformat:"s" == selected_brand %}selected{% endif %}>
+                            {% if brand.image %}
+                                <img src="{{ brand.image.url }}" alt="{{ brand.name }}" style="width: 20px; height: 20px; margin-right: 5px;">
+                            {% endif %}
+                            {{ brand.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+    
 
-                <div class="col-12 text-center mt-2">
-                    <button type="submit" class="btn btn-sm btn-success">Apply</button>
-                    <a href="{% url 'products:home' %}" class="btn btn-sm btn-secondary ms-2">Reset</a>
-                </div>
+            <div class="col-md-3">
+                <label for="price" class="form-label">💰 Sort by Price</label>
+                <select name="price" id="price" class="form-select" onchange="this.form.submit()">
+                    <option value="">Select Price Order</option>
+                    <option value="asc" {% if price_filter == "asc" %}selected{% endif %}>Low to High</option>
+                    <option value="desc" {% if price_filter == "desc" %}selected{% endif %}>High to Low</option>
+                </select>
+            </div>
+    
+            <div class="col-md-3">
+                <label for="rating" class="form-label">⭐ Sort by Rating</label>
+                <select name="rating" id="rating" class="form-select" onchange="this.form.submit()">
+                    <option value="">Select Rating Order</option>
+                    <option value="asc" {% if rating_filter == "asc" %}selected{% endif %}>Lowest First</option>
+                    <option value="desc" {% if rating_filter == "desc" %}selected{% endif %}>Highest First</option>
+                </select>
+            </div>
+    
+            <div class="col-12 text-center d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary mt-3 me-2">✅ Apply Filters</button>
+                <a href="{% url 'products:home' %}" class="btn btn-sm btn-secondary mt-3">🔄 Reset</a>
             </div>
         </form>
     </div>
-  
+    
     <div class="row">
         {% for product in products %}
             <div class="col-md-4">
@@ -83,8 +112,7 @@
             <p class="text-center">No products available.</p>
         {% endfor %}
     </div>
- 
-
+    
 </div>
 
 {% endblock %}

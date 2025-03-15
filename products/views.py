@@ -87,41 +87,43 @@ def product_by_category(request, category_id):
         'tags': tags
     })
 
-def product_by_tag(request, tag_id):
 
-    tag = get_object_or_404(Tag, id = tag_id)
-    products = Product.objects.filter(tag=tag)
-    brands = Brand.objects.all()
-    categories = Category.objects.all()
-    tags = Tag.objects.all()
-    return render(request, 'products/home.html', {
-        'products': products,
-        'brands': brands,
-        'categories': categories,
-        'tags': tags
-    })
-
-
-def sort_product(request):
-
-
+def filtered_products(request):
+    
+    
     products = Product.objects.all()
+    categories = Category.objects.all()
+    brands = Brand.objects.all()
 
+
+    selected_category = request.GET.get('category')
+    selected_brand = request.GET.get('brand')
     price_filter = request.GET.get('price')
     rating_filter = request.GET.get('rating')
 
+    if selected_category:
+        products = products.filter(category_id=selected_category)
+
+
+    if selected_brand:
+        products = products.filter(brand_id=selected_brand)
+
     if price_filter == 'asc':
-        products = products.order_by('price')  
+        products = products.order_by('price')
     elif price_filter == 'desc':
-        products = products.order_by('-price') 
+        products = products.order_by('-price')
 
     if rating_filter == 'asc':
-        products = products.annotate(avg_rating=Avg('review__rating')).order_by('avg_rating') 
+        products = products.annotate(avg_rating=Avg('review__rating')).order_by('avg_rating')
     elif rating_filter == 'desc':
-        products = products.annotate(avg_rating=Avg('review__rating')).order_by('-avg_rating') 
+        products = products.annotate(avg_rating=Avg('review__rating')).order_by('-avg_rating')
 
     return render(request, 'products/home.html', {
         'products': products,
+        'categories': categories,
+        'brands': brands,
+        'selected_category': selected_category,
+        'selected_brand': selected_brand,
         'price_filter': price_filter,
         'rating_filter': rating_filter,
     })

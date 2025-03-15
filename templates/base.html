@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="eng">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +12,7 @@
 
         .carousel-control-prev-icon,
         .carousel-control-next-icon {
-            background-color: black;  /* تغییر رنگ دکمه‌ها */
+            background-color: black;
             border-radius: 5px;
         }
 
@@ -44,43 +44,6 @@
             color: #f8f9fa !important;
         }
 
-        #sidebar {
-            position: fixed;
-            top: 0;
-            left: -260px;
-            width: 250px;
-            height: 100vh;
-            background: #252525 !important;
-            color: white;
-            padding: 20px;
-            transition: left 0.3s ease-in-out;
-            overflow-y: auto;
-            z-index: 2000;
-        }
-        #sidebar.active {
-            left: 0;
-        }
-        .sidebar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        #close-menu {
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: white;
-            cursor: pointer;
-        }
-        .sidebar-link {
-            display: block;
-            padding: 10px;
-            color: white;
-            text-decoration: none;
-        }
-        .sidebar-link:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
         #overlay {
             display: none;
             position: fixed;
@@ -141,7 +104,6 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
         <div class="container">
-            <button class="btn btn-outline-light me-3" id="menu-toggle">☰</button>
             <a class="navbar-brand fw-bold" href="{% url 'products:home' %}">🛒 Net Store</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -162,29 +124,6 @@
     </nav>
     
 
-<div id="sidebar">
-    <div class="sidebar-header">
-        <h4>📂 Filters</h4>
-        <button id="close-menu">&times;</button>
-    </div>
-    <hr>
-    <h5>🏷️ Brands</h5>
-    <ul>
-        {% for brand in brands %}
-            <li><a href="{% url 'products:product-by-brand' brand.id %}" class="sidebar-link">{{ brand.name }}</a></li>
-        {% empty %}
-            <li>No brands found.</li>
-        {% endfor %}
-    </ul>
-    <h5>📦 Categories</h5>
-    <ul>
-        {% for category in categories %}
-            <li><a href="{% url 'products:product-by-category' category.id %}" class="sidebar-link">{{ category.name }}</a></li>
-        {% empty %}
-            <li>No categories found.</li>
-        {% endfor %}
-    </ul>
-</div>
 <div id="overlay"></div>
 
 {% if messages %}
@@ -202,7 +141,7 @@
     {% block content %}{% endblock %}
 </div>
 
-<!-- Footer Section -->
+
 <footer>
     <p>© 2025 Net Store. All rights reserved.</p>
     <p>Design by <a href="https://www.example.com" target="_blank">Your Company</a></p>
