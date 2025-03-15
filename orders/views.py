@@ -52,3 +52,17 @@ def add_to_cart(request, product_id):
     messages.success(request, f"{product.name} Added to cart")
     
     return redirect('orders:order-detail', order_id=order.id) 
+
+
+def remove_from_cart(request, order_item_id):
+    
+    order_item = get_object_or_404(OrderItem, id=order_item_id)
+    order = order_item.order
+    order_item.delete()
+    
+    order.total_price = sum(item.quantity * item.price for item in order.items.all())
+    order.save()
+    
+    messages.success(request, "Item removed from cart")
+    
+    return redirect('orders:order-detail', order_id=order.id)

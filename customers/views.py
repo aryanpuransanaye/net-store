@@ -3,7 +3,6 @@ from django.contrib import messages
 from .models import Address, Wishlist
 from .forms import AddressForm
 from products.models import Product
-from orders.models import Order, OrderItem
 
 
 def address_list(request):

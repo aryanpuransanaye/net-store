@@ -11,4 +11,5 @@ urlpatterns = [
     path('brand/<int:brand_id>/', views.product_by_brand, name='product-by-brand'),
     path('category/<int:category_id>/', views.product_by_category, name='product-by-category'),
     path('tag/<int:tag_id>/', views.product_by_tag, name='product-by-tag'),
+    path('sort-by/', views.sort_product, name='sort-by'),
 ]

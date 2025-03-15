@@ -3,118 +3,88 @@
 {% block content %}
 
 <div class="container mt-5">
+
+    <div id="productCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for product in products %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <a href="{% url 'products:product-detail' product.id %}">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="d-block mx-auto" style="max-width: 500px; height: 300px; object-fit: cover;" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/300x200" class="d-block mx-auto" style="max-width: 400px; height: 300px; object-fit: cover;" alt="No Image Available">
+                        {% endif %}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+
     <h2 class="text-center mb-4 fw-bold">🔥 Our Products</h2>
-    <div class="row">
-        {% for product in products %}
-        <div class="col-md-4">
-            <div class="card product-card shadow-sm mb-4">
-                <div class="card-body text-center">
-                    <h5 class="card-title fw-bold">{{ product.name }}</h5>
-                    <p class="card-text"><strong>💲 Price:</strong> ${{ product.price }}</p>
-                    <p class="card-text"><strong>🏷️ Brand:</strong> {{ product.brand }}</p>
-                    <p class="card-text"><strong>📦 Category:</strong> {{ product.category }}</p>
-                    <a href="{% url 'products:product-detail' product.id %}" class="btn btn-primary mt-2">View Details</a>
+
+
+    <div class="card mb-4 shadow-sm p-3">
+        <form method="GET" action="{% url 'products:sort-by' %}">
+            <div class="row">
+           
+                <div class="col-6 mb-2">
+                    <label for="price" class="form-label fs-6">💲 Price</label>
+                    <select name="price" id="price" class="form-select form-select-sm">
+                        <option value="">All Prices</option>
+                        <option value="asc" {% if request.GET.price == 'asc' %}selected{% endif %}>Low to High</option>
+                        <option value="desc" {% if request.GET.price == 'desc' %}selected{% endif %}>High to Low</option>
+                    </select>
+                </div>
+  
+                <div class="col-6 mb-2">
+                    <label for="rating" class="form-label fs-6">⭐ Rating</label>
+                    <select name="rating" id="rating" class="form-select form-select-sm">
+                        <option value="">All Ratings</option>
+                        <option value="asc" {% if request.GET.rating == 'asc' %}selected{% endif %}>Low to High</option>
+                        <option value="desc" {% if request.GET.rating == 'desc' %}selected{% endif %}>High to Low</option>
+                    </select>
+                </div>
+
+                <div class="col-12 text-center mt-2">
+                    <button type="submit" class="btn btn-sm btn-success">Apply</button>
+                    <a href="{% url 'products:home' %}" class="btn btn-sm btn-secondary ms-2">Reset</a>
                 </div>
             </div>
-        </div>
+        </form>
+    </div>
+  
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4">
+                <div class="card product-card shadow-sm mb-4">
+                    <div class="card-body text-center">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="img-fluid rounded mb-3" style="max-width: 250px; height: 150px; object-fit: cover;" alt="{{ product.name }}">
+                        {% endif %}
+
+                        <h5 class="card-title fw-bold">{{ product.name }}</h5>
+                        <p class="card-text"><strong>💲 Price:</strong> ${{ product.price }}</p>
+                        <p class="card-text"><strong>🏷️ Brand:</strong> {{ product.brand }}</p>
+                        <p class="card-text"><strong>📦 Category:</strong> {{ product.category }}</p>
+                        <a href="{% url 'products:product-detail' product.id %}" class="btn btn-primary mt-2">View Details</a>
+                    </div>
+                </div>
+            </div>
         {% empty %}
-        <p class="text-center">No products available.</p>
+            <p class="text-center">No products available.</p>
         {% endfor %}
     </div>
+ 
+
 </div>
 
-{% endblock %}
-
-{% block extra_css %}
-<style>
-
-
-#sidebar {
-    position: fixed;
-    top: 0;
-    left: -260px;
-    width: 250px;
-    height: 100vh;
-    background: #343a40;
-    color: white;
-    padding: 20px;
-    transition: left 0.3s ease-in-out;
-    overflow-y: auto;
-    z-index: 2000;
-}
-#sidebar.active {
-    left: 0;
-}
-.sidebar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.sidebar-header h4 {
-    margin: 0;
-}
-#close-menu {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
-}
-.sidebar-link {
-    display: block;
-    padding: 10px;
-    color: white;
-    text-decoration: none;
-}
-.sidebar-link:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-#overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-}
-
-/* Product Cards */
-.product-card {
-    border-radius: 15px;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.product-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-}
-</style>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    var menuToggle = document.getElementById("menu-toggle");
-    var sidebar = document.getElementById("sidebar");
-    var closeMenu = document.getElementById("close-menu");
-    var overlay = document.getElementById("overlay");
-
-    menuToggle.addEventListener("click", function () {
-        sidebar.classList.add("active");
-        overlay.style.display = "block";
-    });
-
-    closeMenu.addEventListener("click", function () {
-        sidebar.classList.remove("active");
-        overlay.style.display = "none";
-    });
-
-    overlay.addEventListener("click", function () {
-        sidebar.classList.remove("active");
-        overlay.style.display = "none";
-    });
-});
-</script>
 {% endblock %}
