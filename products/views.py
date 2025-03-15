@@ -1,31 +1,65 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from products.models import Product, Brand, Category, Tag, Review
 from .forms import ReviewForms
-from customers.models import Customer
 from django.db.models import Avg
+from django.contrib import messages
+from customers.models import Customer
+from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+from products.models import Product, Brand, Category, Tag, Review
 
 
 def home(request):
 
-    products = Product.objects.all()
-    brands = Brand.objects.all()
+    products_list = Product.objects.all()
     categories = Category.objects.all()
-    tags = Tag.objects.all()
-    
+    brands = Brand.objects.all()
+
+    selected_category = request.GET.get('category')
+    selected_brand = request.GET.get('brand')
+    price_filter = request.GET.get('price')
+    rating_filter = request.GET.get('rating')
+
+    if selected_category and selected_category.isdigit() :
+        products_list = products_list.filter(category_id=selected_category)
+
+    if selected_brand and selected_brand.isdigit():
+        products_list = products_list.filter(brand_id=selected_brand)
+
+    if price_filter == 'asc':
+        products_list = products_list.order_by('price')
+    elif price_filter == 'desc':
+        products_list = products_list.order_by('-price')
+
+
+    if rating_filter in ['asc', 'desc']:
+        products_list = products_list.annotate(avg_rating=Avg('review__rating'))
+        if rating_filter == 'asc':
+            products_list = products_list.order_by('avg_rating')
+        else:
+            products_list = products_list.order_by('-avg_rating')
+
+    paginator = Paginator(products_list, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'products/home.html', {
-        'products': products,
-        'brands': brands,
+        'products_list': products_list,
+        'page_obj': page_obj,
         'categories': categories,
-        'tags': tags
+        'brands': brands,
+        'selected_category': selected_category,
+        'selected_brand': selected_brand,
+        'price_filter': price_filter,
+        'rating_filter': rating_filter,
     })
+
 
 
 def product_detail(request, product_id):
 
     product = get_object_or_404(Product, id = product_id)
     return render(request, 'products/product_detail.html', {'product': product})
+
 
 def product_review(request, product_id):
 
@@ -85,45 +119,4 @@ def product_by_category(request, category_id):
         'brands': brands,
         'categories': categories,
         'tags': tags
-    })
-
-
-def filtered_products(request):
-    
-    
-    products = Product.objects.all()
-    categories = Category.objects.all()
-    brands = Brand.objects.all()
-
-
-    selected_category = request.GET.get('category')
-    selected_brand = request.GET.get('brand')
-    price_filter = request.GET.get('price')
-    rating_filter = request.GET.get('rating')
-
-    if selected_category:
-        products = products.filter(category_id=selected_category)
-
-
-    if selected_brand:
-        products = products.filter(brand_id=selected_brand)
-
-    if price_filter == 'asc':
-        products = products.order_by('price')
-    elif price_filter == 'desc':
-        products = products.order_by('-price')
-
-    if rating_filter == 'asc':
-        products = products.annotate(avg_rating=Avg('review__rating')).order_by('avg_rating')
-    elif rating_filter == 'desc':
-        products = products.annotate(avg_rating=Avg('review__rating')).order_by('-avg_rating')
-
-    return render(request, 'products/home.html', {
-        'products': products,
-        'categories': categories,
-        'brands': brands,
-        'selected_category': selected_category,
-        'selected_brand': selected_brand,
-        'price_filter': price_filter,
-        'rating_filter': rating_filter,
     })

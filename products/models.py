@@ -1,7 +1,7 @@
-from django.db import models
 from decimal import Decimal
-from django.utils import timezone
 from django.db import models
+from django.db import models
+from django.utils import timezone
 
 
 class Category(models.Model):

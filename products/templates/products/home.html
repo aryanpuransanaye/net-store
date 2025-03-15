@@ -6,7 +6,7 @@
 
     <div id="productCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
         <div class="carousel-inner">
-            {% for product in products %}
+            {% for product in products_list %}
                 <div class="carousel-item {% if forloop.first %}active{% endif %}">
                     <a href="{% url 'products:product-detail' product.id %}">
                         {% if product.image %}
@@ -28,43 +28,33 @@
         </button>
     </div>
 
-
     <h2 class="text-center mb-4 fw-bold">🔥 Our Products</h2>
 
-
     <div class="card mb-4 shadow-sm p-4">
-        <form method="GET" action="{% url 'products:sort-by' %}" class="row g-3">
-            
+        <form method="GET" action="{% url 'products:home' %}" class="row g-3">
             <div class="col-md-3">
                 <label for="category" class="form-label">📂 Select Category</label>
                 <select name="category" id="category" class="form-select" onchange="this.form.submit()">
                     <option value="">All Categories</option>
                     {% for category in categories %}
                         <option value="{{ category.id }}" {% if category.id|stringformat:"s" == selected_category %}selected{% endif %}>
-                            {% if category.image %}
-                                <img src="{{ category.image.url }}" alt="{{ category.name }}" style="width: 20px; height: 20px; margin-right: 5px;">
-                            {% endif %}
                             {{ category.name }}
                         </option>
                     {% endfor %}
                 </select>
             </div>
-    
+
             <div class="col-md-3">
                 <label for="brand" class="form-label">🏷️ Select Brand</label>
                 <select name="brand" id="brand" class="form-select" onchange="this.form.submit()">
                     <option value="">All Brands</option>
                     {% for brand in brands %}
                         <option value="{{ brand.id }}" {% if brand.id|stringformat:"s" == selected_brand %}selected{% endif %}>
-                            {% if brand.image %}
-                                <img src="{{ brand.image.url }}" alt="{{ brand.name }}" style="width: 20px; height: 20px; margin-right: 5px;">
-                            {% endif %}
                             {{ brand.name }}
                         </option>
                     {% endfor %}
                 </select>
             </div>
-    
 
             <div class="col-md-3">
                 <label for="price" class="form-label">💰 Sort by Price</label>
@@ -74,7 +64,7 @@
                     <option value="desc" {% if price_filter == "desc" %}selected{% endif %}>High to Low</option>
                 </select>
             </div>
-    
+
             <div class="col-md-3">
                 <label for="rating" class="form-label">⭐ Sort by Rating</label>
                 <select name="rating" id="rating" class="form-select" onchange="this.form.submit()">
@@ -83,7 +73,7 @@
                     <option value="desc" {% if rating_filter == "desc" %}selected{% endif %}>Highest First</option>
                 </select>
             </div>
-    
+
             <div class="col-12 text-center d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary mt-3 me-2">✅ Apply Filters</button>
                 <a href="{% url 'products:home' %}" class="btn btn-sm btn-secondary mt-3">🔄 Reset</a>
@@ -92,7 +82,7 @@
     </div>
     
     <div class="row">
-        {% for product in products %}
+        {% for product in page_obj %}
             <div class="col-md-4">
                 <div class="card product-card shadow-sm mb-4">
                     <div class="card-body text-center">
@@ -112,7 +102,36 @@
             <p class="text-center">No products available.</p>
         {% endfor %}
     </div>
-    
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1&category={{ selected_category }}&brand={{ selected_brand }}&price={{ price_filter }}&rating={{ rating_filter }}">« First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&category={{ selected_category }}&brand={{ selected_brand }}&price={{ price_filter }}&rating={{ rating_filter }}">‹ Prev</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&category={{ selected_category }}&brand={{ selected_brand }}&price={{ price_filter }}&rating={{ rating_filter }}">Next ›</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&category={{ selected_category }}&brand={{ selected_brand }}&price={{ price_filter }}&rating={{ rating_filter }}">Last »</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+
 </div>
 
 {% endblock %}
