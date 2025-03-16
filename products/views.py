@@ -1,11 +1,12 @@
 from .forms import ReviewForms
-from django.db.models import Avg
+from django.db.models import Avg, Q
 from django.contrib import messages
 from customers.models import Customer
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from products.models import Product, Brand, Category, Tag, Review
+
 
 
 def home(request):
@@ -53,6 +54,22 @@ def home(request):
         'rating_filter': rating_filter,
     })
 
+
+def search_product(request):
+    query = request.GET.get('q', '')
+    products = Product.objects.all()
+    
+    if query:
+         products = products.filter(
+            Q(name__icontains=query) |
+            Q(tag__name__icontains=query) |
+            Q(brand__name__icontains=query) |  
+            Q(category__name__icontains=query) 
+        ).distinct()
+    
+    return render(request, 'products/search_results.html', {
+        'products': products, 'query': query
+        })
 
 
 def product_detail(request, product_id):

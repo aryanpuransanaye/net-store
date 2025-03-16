@@ -106,11 +106,24 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'products:home' %}">🛒 Net Store</a>
+           
+            <a class="navbar-brand fw-bold me-auto" href="{% url 'products:home' %}">🛒 Net Store</a>
+            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="mx-auto w-50">
+                    <form class="d-flex" method="GET" action="{% url 'products:search-product' %}">
+                        <input class="form-control form-control-lg rounded-pill me-2" type="search" name="q" 
+                               placeholder="Search products..." aria-label="Search" required>
+                        <button class="btn btn-lg btn-outline-light rounded-pill" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+    
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'customers:address-list' %}"><i class="fas fa-map-marker-alt"></i> Addresses</a></li>
@@ -152,23 +165,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    var menuToggle = document.getElementById("menu-toggle");
-    var sidebar = document.getElementById("sidebar");
-    var closeMenu = document.getElementById("close-menu");
     var overlay = document.getElementById("overlay");
 
-    menuToggle.addEventListener("click", function () {
-        sidebar.classList.add("active");
-        overlay.style.display = "block";
-    });
-
-    closeMenu.addEventListener("click", function () {
-        sidebar.classList.remove("active");
-        overlay.style.display = "none";
-    });
-
     overlay.addEventListener("click", function () {
-        sidebar.classList.remove("active");
         overlay.style.display = "none";
     });
 });
