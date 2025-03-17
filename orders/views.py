@@ -37,7 +37,7 @@ def add_to_cart(request, product_id):
     order_item, created = OrderItem.objects.get_or_create(
         order=order,
         product=product,
-        defaults={'quantity': 1, 'price': product.price}
+        defaults={'quantity': 1, 'price': product.final_price}
     )
 
     if not created:
@@ -54,15 +54,12 @@ def add_to_cart(request, product_id):
     return redirect('orders:order-detail', order_id=order.id) 
 
 
-def remove_from_cart(request, order_item_id):
+def remove_order(request, order_id):
     
-    order_item = get_object_or_404(OrderItem, id=order_item_id)
-    order = order_item.order
-    order_item.delete()
+    order = get_object_or_404(Order, id=order_id)
+
+    order.delete()
     
-    order.total_price = sum(item.quantity * item.price for item in order.items.all())
-    order.save()
+    messages.success(request, "Your order has been deleted successfully.")
     
-    messages.success(request, "Item removed from cart")
-    
-    return redirect('orders:order-detail', order_id=order.id)
+    return redirect('orders:customer-orders')

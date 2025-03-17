@@ -88,11 +88,26 @@
                         {% if product.image %}
                             <img src="{{ product.image.url }}" class="img-fluid rounded mb-3" style="max-width: 250px; height: 150px; object-fit: cover;" alt="{{ product.name }}">
                         {% endif %}
-
+    
                         <h5 class="card-title fw-bold">{{ product.name }}</h5>
-                        <p class="card-text"><strong>💲 Price:</strong> ${{ product.price }}</p>
                         <p class="card-text"><strong>🏷️ Brand:</strong> {{ product.brand }}</p>
                         <p class="card-text"><strong>📦 Category:</strong> {{ product.category }}</p>
+    
+                        {% if product.discount_percentage > 0 %}
+                            <p class="card-text">
+                                <strong>💲 Price:</strong>
+                                <span style="text-decoration: line-through; color: red;">${{ product.price }}</span>
+                                <span class="text-danger fw-bold">
+                                    {{ product.discount_percentage }}% OFF
+                                </span>
+                            </p>
+                            <p class="card-text">
+                                <strong>💲 Discounted Price:</strong> ${{ product.final_price }}
+                            </p>
+                        {% else %}
+                            <p class="card-text"><strong>💲 Price:</strong> ${{ product.price }}</p>
+                        {% endif %}
+    
                         <a href="{% url 'products:product-detail' product.id %}" class="btn btn-primary mt-2">View Details</a>
                     </div>
                 </div>
@@ -100,9 +115,9 @@
         {% empty %}
             <p class="text-center">No products available.</p>
         {% endfor %}
-    </div>
+    </div>    
+    
 
-    <!-- Pagination -->
     {% if page_obj.has_other_pages %}
         <nav>
             <ul class="pagination justify-content-center">

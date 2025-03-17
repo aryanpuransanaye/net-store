@@ -19,8 +19,7 @@
                                 bg-{% if order.status == 'Pending' %}warning
                                    {% elif order.status == 'Completed' %}success
                                    {% else %}secondary
-                                   {% endif %}
-                                ">
+                                   {% endif %}">
                                 {{ order.status }}
                             </span>
                         </div>
@@ -28,7 +27,7 @@
                             <a href="{% url 'orders:order-detail' order.id %}" class="btn btn-outline-primary btn-sm">
                                 <i class="fas fa-eye"></i> View Details
                             </a>
-                            <a href="" class="btn btn-outline-warning btn-sm ms-2">
+                            <a href="{% url 'orders:remove-order' order.id %}" class="btn btn-outline-warning btn-sm ms-2">
                                 <i class="fas fa-trash"></i> Delete Order
                             </a>
                         </div>
