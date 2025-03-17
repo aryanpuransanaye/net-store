@@ -67,6 +67,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            animation: slideIn 0.5s ease-in-out, slideOut 1s 4s forwards;;
         }
 
         .alert {
@@ -223,6 +224,13 @@ document.addEventListener("DOMContentLoaded", function () {
     overlay.addEventListener("click", function () {
         overlay.style.display = "none";
     });
+    const notification = document.querySelector(".notification");
+        
+        if (notification) {
+            setTimeout(() => {
+                notification.style.display = "none";
+            }, 4000);
+        }
 });
 </script>
 {% block extra_js %}{% endblock %}

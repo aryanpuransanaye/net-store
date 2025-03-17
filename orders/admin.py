@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  Order, OrderItem
+from .models import  Order, OrderItem, DiscountByCode
 
 
 @admin.action(description = 'تغیر وضعیت به ارسال شده')
@@ -33,3 +33,11 @@ class OrderItemAdmin(admin.ModelAdmin):
     list_filter = ['order']
     search_fields = ['order']
     list_per_page = 10
+
+
+@admin.register(DiscountByCode)
+class DiscountByCodeAdmin(admin.ModelAdmin):
+
+    list_display = ['discount_code', 'discount_percentage', 'start_date', 'end_date']
+    list_filter = ['start_date', 'end_date']
+    ordering = ['-start_date',]

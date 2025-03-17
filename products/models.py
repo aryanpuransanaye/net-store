@@ -42,24 +42,6 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    def update_final_price(self):
-       
-        discount = Discount.objects.filter(
-            product=self, 
-            start_date__lte=timezone.now(), 
-            end_date__gte=timezone.now()
-        ).first()
-
-        if discount:  
-        
-            discount_amount = Decimal(str(discount.discount_percentage)) / Decimal('100')
-            self.final_price = self.price * (Decimal('1') - discount_amount)
-            self.discount_percentage = discount.discount_percentage
-        else:
-            self.final_price = self.price
-            self.discount_percentage = discount.discount_percentage
-
-        self.save()
 
 class Tag(models.Model):
 
@@ -92,14 +74,4 @@ class Discount(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.discount_percentage}%"
-    
-class DiscountByCode(models.Model):
-
-    product = models.ForeignKey(Product, on_delete = models.CASCADE)
-    discount_percentage = models.FloatField()
-    discount_code = models.CharField(max_length=255, null = False, blank = False)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-
-    def __str__(self):
-        return f"{self.product.name} - {self.discount_code}%"
+ 

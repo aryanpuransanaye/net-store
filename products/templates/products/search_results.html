@@ -17,10 +17,25 @@
                         {% endif %}
 
                         <h5 class="card-title fw-bold">{{ product.name }}</h5>
+                        
+                        {% if product.discount_percentage > 0 %}
+                        <p class="card-text">
+                            <strong>💲 Price:</strong>
+                            <span style="text-decoration: line-through; color: red;">${{ product.price }}</span>
+                            <span class="text-danger fw-bold">
+                                {{ product.discount_percentage }}% OFF
+                            </span>
+                        </p>
+                        <p class="card-text">
+                            <strong>💲 Discounted Price:</strong> ${{ product.final_price }}
+                        </p>
+                    {% else %}
                         <p class="card-text"><strong>💲 Price:</strong> ${{ product.price }}</p>
-                        <p class="card-text"><strong>🏷️ Brand:</strong> {{ product.brand }}</p>
-                        <p class="card-text"><strong>📦 Category:</strong> {{ product.category }}</p>
-                        <a href="{% url 'products:product-detail' product.id %}" class="btn btn-primary mt-2">View Details</a>
+                    {% endif %}
+
+                    <p class="card-text"><strong>🏷️ Brand:</strong> {{ product.brand }}</p>
+                    <p class="card-text"><strong>📦 Category:</strong> {{ product.category }}</p>
+                    <a href="{% url 'products:product-detail' product.id %}" class="btn btn-primary mt-2">View Details</a>
                     </div>
                 </div>
             </div>

@@ -13,7 +13,6 @@ def home(request):
     products_list = Product.objects.all()
     categories = Category.objects.all()
     brands = Brand.objects.all()
-    discount = Discount.objects.all()
 
     selected_category = request.GET.get('category')
     selected_brand = request.GET.get('brand')
@@ -52,11 +51,11 @@ def home(request):
         'selected_brand': selected_brand,
         'price_filter': price_filter,
         'rating_filter': rating_filter,
-        'discount': discount
     })
 
 
 def search_product(request):
+    
     query = request.GET.get('q', '')
     products = Product.objects.all()
     
