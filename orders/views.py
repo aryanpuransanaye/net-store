@@ -2,9 +2,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import Order, OrderItem, DiscountByCode
 from products.models import Product
-from django.utils import timezone
 from decimal import Decimal
+from django.contrib.auth.decorators import login_required
 from customers.models import Address
+
 
 def customer_orders(request):
     
@@ -20,14 +21,9 @@ def order_detail(request, order_id):
 
     return render(request, 'orders/order_detail.html', {'order': order,
                                                         'address': address})
-
+@login_required
 def add_to_cart(request, product_id):
     
-    if not request.user.is_authenticated:
-        messages.error(request, "you need to login first.")
-        return redirect('accounts:login')  
-
-  
     product = get_object_or_404(Product, id=product_id)
 
 

@@ -1,11 +1,38 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Address, Wishlist
+from .models import Address, Wishlist, Customer
 from .forms import AddressForm
+from django.contrib.auth.decorators import login_required
 from products.models import Product
 
 
+@login_required
+def customer_profile(request):
+
+    user = request.user
+    
+    try:
+        customer = Customer.objects.get(user=user)
+        phone_number = customer.phone
+        status = customer.status
+        profile_picture = customer.profile_picture
+    except Customer.DoesNotExist:
+       
+        phone_number = None
+        status = 'Inactive'
+        profile_picture = None
+    
+    context = {
+        'user': user,
+        'phone_number': phone_number,
+        'profile_picture': profile_picture,
+        'status': status,
+    }
+    
+    return render(request, 'customers/customer_profile.html', context)
+
 def address_list(request):
+
     customer = request.user.customer
     addresses = Address.objects.filter(customer = customer)
     return render(request, 'customers/address_list.html', {'addresses': addresses})
@@ -83,13 +110,16 @@ def remove_from_wishlist(request, product_id):
     
     return redirect('customers:wishlist-list')
 
-
+@login_required
 def wishlist_add(request, product_id):
 
     customer = request.user.customer
     product = Product.objects.get(id=product_id)
     wishlist, created = Wishlist.objects.get_or_create(customer=customer)
     wishlist.product.add(product)
+
+    messages.success(request, f"✅ '{product.name}' has been added to your wishlist!")
+
     return redirect('customers:wishlist-list')
 
 

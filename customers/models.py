@@ -10,7 +10,8 @@ class Customer(models.Model):
         ]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=15, unique=True)
+    profile_picture = models.ImageField(upload_to = 'customer_profile_image/', null = True, blank = True)
+    phone = models.CharField(max_length=15, unique=True, null= True, blank = True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, default='active', choices = CHOISES)
     

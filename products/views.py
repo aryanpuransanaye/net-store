@@ -2,6 +2,8 @@ from .forms import ReviewForms
 from django.db.models import Avg, Q
 from django.contrib import messages
 from customers.models import Customer
+from django.utils import timezone
+from decimal import Decimal
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
@@ -9,7 +11,6 @@ from products.models import Product, Brand, Category, Review, Discount
 
 
 def home(request):
-    
     products_list = Product.objects.all()
     categories = Category.objects.all()
     brands = Brand.objects.all()
@@ -18,7 +19,6 @@ def home(request):
     selected_brand = request.GET.get('brand')
     price_filter = request.GET.get('price')
     rating_filter = request.GET.get('rating')
-
 
     if selected_category and selected_category.isdigit():
         products_list = products_list.filter(category_id=selected_category)
@@ -37,7 +37,26 @@ def home(request):
             products_list = products_list.order_by('avg_rating')
         else:
             products_list = products_list.order_by('-avg_rating')
-    
+
+    for product in products_list:
+        valid_discounts = Discount.objects.filter(
+            product=product,
+            start_date__lte=timezone.now(),
+            end_date__gte=timezone.now()
+        )
+
+        if valid_discounts.exists():
+            latest_discount = valid_discounts.order_by('-start_date').first()
+            discount_amount = Decimal(str(latest_discount.discount_percentage)) / Decimal('100')
+            product.final_price = product.price * (Decimal('1') - discount_amount)
+            product.discount_percentage = latest_discount.discount_percentage
+        else:
+            product.final_price = product.price
+            product.discount_percentage = 0
+
+        product.save()
+
+
     paginator = Paginator(products_list, 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -52,7 +71,6 @@ def home(request):
         'price_filter': price_filter,
         'rating_filter': rating_filter,
     })
-
 
 def search_product(request):
     
