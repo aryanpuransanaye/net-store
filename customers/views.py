@@ -48,6 +48,18 @@ def delete_address(request, address_id):
 
     return redirect('customers:address-list')  
 
+def set_active_address(request, address_id):
+
+    address = get_object_or_404(Address, id = address_id, customer = request.user.customer)
+
+    Address.objects.filter(customer = request.user.customer, is_active = True).update(is_active = False)
+
+    address.is_active = True
+    address.save()
+
+    messages.success(request, "Your active address has been updated successfully!")
+    return redirect('customers:address-list')
+
 
 def wishlist_list(request):
     

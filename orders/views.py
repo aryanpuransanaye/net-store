@@ -4,21 +4,22 @@ from .models import Order, OrderItem, DiscountByCode
 from products.models import Product
 from django.utils import timezone
 from decimal import Decimal
+from customers.models import Address
 
 def customer_orders(request):
     
     customer = request.user.customer
     orders = Order.objects.filter(customer=customer)
-
     return render(request, 'orders/cart_detail.html', {'orders': orders})
 
-
 def order_detail(request, order_id):
-    
-    order = get_object_or_404(Order, id=order_id, customer=request.user.customer)
-    
-    return render(request, 'orders/order_detail.html', {'order': order})
 
+    customer = request.user.customer
+    order = get_object_or_404(Order, id=order_id, customer=request.user.customer)
+    address = get_object_or_404(Address, customer = customer, is_active = True)
+
+    return render(request, 'orders/order_detail.html', {'order': order,
+                                                        'address': address})
 
 def add_to_cart(request, product_id):
     

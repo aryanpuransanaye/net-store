@@ -15,7 +15,7 @@ def update_product_price(sender, instance, **kwargs):
         start_date__lte=timezone.now(),
         end_date__gte=timezone.now()
     )
-
+    
     if valid_discounts.exists():
         discount_amount = Decimal(str(instance.discount_percentage)) / Decimal('100')
         product.final_price = product.price * (Decimal('1') - discount_amount)

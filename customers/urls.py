@@ -8,6 +8,7 @@ urlpatterns = [
     path('address-create/', views.address_create, name='address-create'),
     path('edit-address/<int:address_id>/', views.edit_address, name='edit-address'),
     path('delete-address/<int:address_id>/', views.delete_address, name='delete-address'),
+    path('address/set-active/<int:address_id>/', views.set_active_address, name='set-active-address'),
     path('wishlist-list/', views.wishlist_list, name='wishlist-list'),
     path('product-select/', views.product_select, name='product-select'),
     path('wishlist-add/<int:product_id>/', views.wishlist_add, name='wishlist-add'),
