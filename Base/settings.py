@@ -39,10 +39,10 @@ INSTALLED_APPS = [
 
 JAZZMIN_SETTINGS = {
     
-    "site_title": "مدیریت فروشگاه نت مارکت",
-    "site_header": "نت مارکت",
-    "site_brand": "نت مارکت",
-    "welcome_sign": "به پنل مدیریت خوش آمدید",
+    "site_title": "Net Market Store Management",
+    "site_header": "Net Store",
+    "site_brand": "🛒 Net Store",
+    "welcome_sign": "Welcome to Addmin Panel",
     
     #"site_logo": "images/logo.png"
 
@@ -51,7 +51,7 @@ JAZZMIN_SETTINGS = {
     "secondary_color": "#333333",
     "accent_color": "#FFC300", 
   
-    "copyright": "© 2025 تمام حقوق محفوظ است.",
+    "copyright": "© 2025 All rights reserved.",
   
     "order_with_respect_to": ["auth", "customers", "orders", "products"],
 
@@ -59,7 +59,7 @@ JAZZMIN_SETTINGS = {
 
         "customers": [
             {
-                "name": "افزودن مشتری جدید",
+                "name": "Add new customer",
                 "url": "customers/customer/add/",
                 "icon": "fas fa-user-plus",
             }
@@ -67,7 +67,7 @@ JAZZMIN_SETTINGS = {
 
         "orders":[
             {
-                "name": "افزودن سفارش جدید",
+                "name": "Add new order",
                 "url": "orders/orderitem/add/",
                 "icon": "fas fa-cart-plus",
             }
@@ -75,7 +75,7 @@ JAZZMIN_SETTINGS = {
 
         "products":[
             {
-                "name": "افزودن محصول جدید",
+                "name": "Add new product",
                 "url": "products/product/add/",
                 "icon": "fas fa-box",
             }

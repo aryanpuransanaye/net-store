@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from customers.models import Customer
+from .forms import RegisterForm
 
 def login_view(request):
 
@@ -33,41 +34,26 @@ def logout_view(request):
 def register_view(request):
 
     if request.method == "POST":
-        first_name = request.POST.get("first_name")
-        last_name = request.POST.get("last_name")
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        password1 = request.POST.get("password1")
-        password2 = request.POST.get("password2")
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data["password1"])
+            user.is_staff = False
+            user.is_superuser = False
+            user.save()
 
-        if password1 != password2:
-            messages.error(request, "❌ Passwords do not match! Please try again.")
-            return redirect("auth:register")
+           
+            customer = Customer.objects.create(user=user)
+            customer.save()
 
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "❌ This username is already taken!")
-            return redirect("core:register")
+            login(request, user)
+            messages.success(request, f"🎉 Welcome {user.first_name}! Your account has been created successfully.")
+            
+            next_url = request.GET.get("next")
+            return redirect(next_url if next_url else "products:home")
+        else:
+            messages.error(request, "❌ Please correct the errors below.")
+    else:
+        form = RegisterForm()
 
-        if User.objects.filter(email=email).exists():
-            messages.error(request, "❌ An account with this email already exists!")
-            return redirect("auth:register")
-
-        user = User.objects.create_user(username=username, email=email, password=password1)
-        user.first_name = first_name
-        user.last_name = last_name
-        user.is_staff = False
-        user.is_superuser = False
-        user.save()
-
-        customer = Customer.objects.create(user=user)
-        customer.save()
-
-        login(request, user)
-        messages.success(request, f"🎉 Welcome {user.first_name}! Your account has been created successfully.")
-
-        next_url = request.GET.get("next")
-        if next_url:
-            return HttpResponseRedirect(next_url)
-        return redirect("products:home")  
-
-    return render(request, "core/register.html")
+    return render(request, "core/register.html", {"form": form})
