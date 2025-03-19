@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Address, Wishlist, Customer
-from .forms import AddressForm
+from .forms import AddressForm, UpdateUserProfile
 from django.contrib.auth.decorators import login_required
 from products.models import Product
 
@@ -31,6 +31,22 @@ def customer_profile(request):
     
     return render(request, 'customers/customer_profile.html', context)
 
+def edit_customer_profile(request):
+
+    user = request.user
+    customer = user.customer  
+
+    if request.method == 'POST':
+        form = UpdateUserProfile(request.POST, request.FILES, user=user, instance=customer)
+        if form.is_valid():
+            form.save(user=user)
+            messages.success(request, "Profile updated successfully.")
+            return redirect('customers:customer-profile')
+    else:
+        form = UpdateUserProfile(user=user, instance=customer)
+
+    return render(request, 'customers/edit_profile.html', {'form': form})
+
 def address_list(request):
 
     customer = request.user.customer
@@ -39,6 +55,7 @@ def address_list(request):
 
 
 def address_create(request):
+
     if request.method == 'POST':
         form = AddressForm(request.POST)
         if form.is_valid():

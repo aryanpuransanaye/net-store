@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="card shadow-lg p-4 rounded-lg" style="width: 400px;">
+    <div class="card shadow-lg p-5 rounded-lg" style="width: 420px;">
         <h2 class="text-center text-primary mb-4">📝 Register</h2>
 
         {% if form.non_field_errors %}
@@ -13,16 +13,23 @@
             </div>
         {% endif %}
 
-        <form method="POST" novalidate>
+        <form method="POST" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
 
             {% for field in form %}
                 <div class="mb-3">
-                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}:</label>
-                    <input type="{{ field.type }}" name="{{ field.name }}" class="form-control" value="{{ field.value|default:'' }}" id="{{ field.id_for_label }}">
+                    <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}:</label>
+                    
+                    {% if field.name == 'profile_picture' %}
+                        {{ field }}
+                    {% else %}
+                        <div class="input-group">
+                            {{ field }}
+                        </div>
+                    {% endif %}
                     
                     {% if field.errors %}
-                        <div class="text-danger small">
+                        <div class="text-danger small mt-1">
                             {% for error in field.errors %}
                                 <p class="mb-0">{{ error }}</p>
                             {% endfor %}
@@ -31,11 +38,11 @@
                 </div>
             {% endfor %}
 
-            <button type="submit" class="btn btn-primary w-100">Register</button>
+            <button type="submit" class="btn btn-primary w-100 py-2 mt-3">Register</button>
         </form>
 
         <div class="text-center mt-3">
-            <p>Already have an account? <a href="{% url 'core:login' %}" class="text-decoration-none">Login here</a></p>
+            <p class="small">Already have an account? <a href="{% url 'core:login' %}" class="text-decoration-none text-primary">Login here</a></p>
         </div>
     </div>
 </div>

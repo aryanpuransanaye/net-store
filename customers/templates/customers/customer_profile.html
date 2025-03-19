@@ -8,9 +8,10 @@
         <div class="col-md-8">
             <div class="card shadow-lg rounded-3">
             
-                <div class="card-header text-center bg-primary text-white py-4">
+                <!-- هدر بدون کادر آبی -->
+                <div class="card-header text-center bg-transparent text-dark py-4">
                     <h4>{{ user.first_name }} {{ user.last_name }}</h4>
-                    <p>{{ user.username }}</p>
+                    <p class="text-muted">{{ user.username }}</p>
                 </div>
                 
                 <div class="row p-4">
@@ -24,8 +25,14 @@
                             {% endif %}
                         </div>
                         <div class="d-flex justify-content-center mt-3">
-                            <a href="{% url 'core:logout' %}" class="btn btn-danger btn-sm rounded-pill px-4">Logout</a>
-                            <a href="" class="btn btn-danger btn-sm rounded-pill px-4">Edit Profile</a>
+                  
+                            <a href="{% url 'core:logout' %}" class="btn btn-danger btn-sm rounded-pill px-4 me-3 shadow-sm d-flex align-items-center">
+                                <i class="fa fa-sign-out-alt me-2"></i> Logout
+                            </a>
+                      
+                            <a href="{% url 'customers:edit-customer-profile' %}" class="btn btn-primary btn-sm rounded-pill px-4 shadow-sm d-flex align-items-center">
+                                <i class="fa fa-edit me-2"></i> Edit Profile
+                            </a>
                         </div>
                     </div>
 

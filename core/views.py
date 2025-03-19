@@ -34,8 +34,9 @@ def logout_view(request):
 def register_view(request):
 
     if request.method == "POST":
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
+
             user = form.save(commit=False)
             user.set_password(form.cleaned_data["password1"])
             user.is_staff = False
@@ -44,6 +45,8 @@ def register_view(request):
 
            
             customer = Customer.objects.create(user=user)
+            customer.phone = form.cleaned_data["phone"]
+            customer.profile_picture = form.cleaned_data["profile_picture"]
             customer.save()
 
             login(request, user)
