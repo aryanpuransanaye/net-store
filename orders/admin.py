@@ -21,7 +21,8 @@ class OrderAdmin(admin.ModelAdmin):
     
     actions = [make_sent, make_pending, make_delivered]
 
-    list_display = ['customer', 'total_price', 'created_at', 'status']
+    list_display = ['customer', 'total_price', 'created_at', 'status', 'final_price']
+    readonly_fields = ['final_price']
     list_filter = ['status']
     search_fields = ['customer', 'status']
     list_per_page = 10
@@ -38,6 +39,7 @@ class OrderItemAdmin(admin.ModelAdmin):
 @admin.register(DiscountByCode)
 class DiscountByCodeAdmin(admin.ModelAdmin):
 
-    list_display = ['discount_code', 'discount_percentage', 'start_date', 'end_date']
+    list_display = ['discount_code', 'discount_percentage', 'start_date', 'end_date', 'used_count', 'max_usage']
+    readonly_fields = ['used_count']
     list_filter = ['start_date', 'end_date']
     ordering = ['-start_date',]

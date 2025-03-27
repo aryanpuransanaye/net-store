@@ -40,6 +40,7 @@ def home(request):
         else:
             products_list = products_list.order_by('-avg_rating')
 
+    updated_products = []
     for product in products_list:
         valid_discounts = Discount.objects.filter(
             product=product,
@@ -56,7 +57,8 @@ def home(request):
             product.final_price = product.price
             product.discount_percentage = 0
 
-        product.save()
+        updated_products.append(product)
+    Product.objects.bulk_update(updated_products, ['final_price', 'discount_percentage'])
 
 
     paginator = Paginator(products_list, 6)
