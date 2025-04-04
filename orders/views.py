@@ -28,8 +28,14 @@ class AddToCartView(APIView):
         if not request.user.is_authenticated:
             return redirect('core:login')
         
-        product = get_object_or_404(Product, id=product_id)
         customer = request.user.customer
+
+        addresses = Address.objects.filter(customer = customer)
+        if not addresses:
+            messages.warning(request, 'You dont have any Address, Please creat your Address.')
+            return redirect('customers:address-create')
+        
+        product = get_object_or_404(Product, id=product_id)
     
         order, created = Order.objects.get_or_create(customer=customer, status="pending")
 
