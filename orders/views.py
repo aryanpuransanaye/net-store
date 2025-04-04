@@ -20,12 +20,14 @@ class CustomerOrderView(APIView):
         
         orders = Order.objects.filter(customer=customer)
         return render(request, 'orders/cart_detail.html', {'orders': orders})
-
-
+    
 class AddToCartView(APIView):
-    permission_classes = [IsAuthenticated]
-
+    
     def post(self, request, product_id):
+
+        if not request.user.is_authenticated:
+            return redirect('core:login')
+        
         product = get_object_or_404(Product, id=product_id)
         customer = request.user.customer
 
@@ -51,7 +53,6 @@ class AddToCartView(APIView):
 
 
 class RemoveOrderView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def post(self, request, order_id):
 
@@ -63,7 +64,6 @@ class RemoveOrderView(APIView):
 
 
 class RemoveOrderItemView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def post(self, request, order_id, item_id):
 
@@ -83,7 +83,6 @@ class RemoveOrderItemView(APIView):
 
 
 class ApplyDiscountView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def post(self, request, order_id):
 

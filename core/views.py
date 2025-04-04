@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 from customers.models import Customer
 from .forms import RegisterForm
 
@@ -16,7 +14,9 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'You are now logged in!')
-            return redirect('products:home')
+            next_page = request.GET.get('next')
+            return redirect(next_page)
+        
         else:
             messages.error(request, 'Invalid username or password.')
 

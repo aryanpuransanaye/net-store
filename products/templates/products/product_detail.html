@@ -43,7 +43,7 @@
             </p>
 
             <div class="d-flex flex-wrap gap-2 mt-4">
-                <form action="{% url 'orders:add-to-cart' product.id %}" method="post">
+                <form method = "POST" action="{% url 'orders:add-to-cart' product.id %}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-success btn-lg rounded-pill shadow">
                         <i class="fas fa-cart-plus"></i> Add to Cart
