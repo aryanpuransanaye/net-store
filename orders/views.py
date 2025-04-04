@@ -30,7 +30,7 @@ class AddToCartView(APIView):
         
         product = get_object_or_404(Product, id=product_id)
         customer = request.user.customer
-
+    
         order, created = Order.objects.get_or_create(customer=customer, status="pending")
 
         order_item, created = OrderItem.objects.get_or_create(

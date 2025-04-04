@@ -43,9 +43,11 @@
             </p>
 
             <div class="d-flex flex-wrap gap-2 mt-4">
-                <form method = "POST" action="{% url 'orders:add-to-cart' product.id %}">
+                <form method="POST" action="{% url 'orders:add-to-cart' product.id %}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-success btn-lg rounded-pill shadow">
+                    <button type="submit" 
+                            class="btn btn-success btn-lg rounded-pill shadow" 
+                            {% if product.stock < 1 %} disabled {% endif %}>
                         <i class="fas fa-cart-plus"></i> Add to Cart
                     </button>
                 </form>
