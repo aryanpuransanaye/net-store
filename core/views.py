@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse
 from django.contrib import messages
 from customers.models import Customer
 from .forms import RegisterForm
@@ -14,7 +15,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'You are now logged in!')
-            next_page = request.GET.get('next')
+            next_page = request.GET.get('next', reverse('products:home'))
             return redirect(next_page)
         
         else:
