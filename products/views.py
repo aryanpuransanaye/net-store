@@ -12,7 +12,7 @@ from products.models import Product, Brand, Category, Review, Discount
 
 def home(request):
 
-    products_list = Product.objects.all()
+    products_list = Product.objects.all().order_by('id')
     products_count = products_list.count()
     categories = Category.objects.all()
     brands = Brand.objects.all()
