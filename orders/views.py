@@ -37,7 +37,7 @@ class AddToCartView(APIView):
         
         product = get_object_or_404(Product, id=product_id)
     
-        order, created = Order.objects.get_or_create(customer=customer, status="pending")
+        order, created = Order.objects.get_or_create(customer=customer, status = "Pending")
 
         order_item, created = OrderItem.objects.get_or_create(
             order=order,
@@ -47,6 +47,8 @@ class AddToCartView(APIView):
 
         if not created:
             order_item.quantity += 1
+            product.stock -= 1
+            product.save()
             order_item.save()
 
         order.total_price = order.update_total_price()
@@ -55,14 +57,21 @@ class AddToCartView(APIView):
 
         messages.success(request, f"{product.name} Added to cart")
 
-        return redirect('orders:order-detail', order_id=order.id)
+        return redirect('products:product-detail', product_id = product.id)
 
 
 class RemoveOrderView(APIView):
 
     def post(self, request, order_id):
 
-        order = get_object_or_404(Order, id=order_id, customer=request.user.customer)
+        order = get_object_or_404(Order, id=order_id, customer=request.user.customer, status = "Pending")
+        order_item = OrderItem.objects.filter(order = order)
+
+        for item in order_item:
+            product = item.product
+            product.stock += item.quantity
+            product.save()
+
         order.delete()
 
         messages.success(request, "Your order has been completely removed as it had no items.")
@@ -73,19 +82,32 @@ class RemoveOrderItemView(APIView):
 
     def post(self, request, order_id, item_id):
 
-        order = get_object_or_404(Order, id=order_id, customer=request.user.customer)
+        order = get_object_or_404(Order, id=order_id, customer=request.user.customer, status = "Pending")
         item = get_object_or_404(OrderItem, id=item_id, order=order)
-        item.delete()
 
-        messages.success(request, f"{item.product.name} has been deleted successfully.")
+        product = item.product
+        
+        if item.quantity > 1:
+            item.quantity -= 1
+            item.save()
+
+            product.stock += 1
+            product.save()
+
+            messages.success(request, f"One {item.product.name} has been removed from your Cart.")
+
+        elif item.quantity == 1:
+            item.delete()
+            messages.success(request, f"{item.product.name} has been deleted successfully.")
         
         if order.items.count() == 0:
             order.delete()
-            return redirect('orders:orders')
+            messages.success(request, "Your order has been completely removed as it had no items.")
+        else:
+            order.total_price = order.update_total_price()
+            order.save()
 
-        order.total_price = order.update_total_price()
-        order.save()
-        return redirect('orders:order-detail', order_id=order.id)
+        return redirect('products:product-detail', product_id=item.product.id)
 
 
 class ApplyDiscountView(APIView):

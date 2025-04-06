@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from products.models import Product, Brand, Category, Review, Discount
+from orders.models import OrderItem, Order
 
 
 def home(request):
@@ -97,8 +98,17 @@ def search_product(request):
 
 def product_detail(request, product_id):
 
-    product = get_object_or_404(Product, id = product_id)
-    return render(request, 'products/product_detail.html', {'product': product})
+    product = get_object_or_404(Product, id=product_id)
+    
+    order = Order.objects.filter(customer=request.user.customer, status='Pending').first()
+    
+    order_item = OrderItem.objects.filter(product=product, order=order).first()
+
+    return render(request, 'products/product_detail.html', {
+        'product': product,
+        'order_item': order_item,
+        'order': order
+    })
 
 
 def product_review(request, product_id):

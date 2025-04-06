@@ -12,7 +12,7 @@
             {% endif %}
         </div>
         <div class="col-md-6">
-            <h2 class="fw-bold">{{ product.name }}</h2>
+            <h2 class="fw-bold mb-3" style="font-size: 2rem; color: #333;">{{ product.name }}</h2>
             <p class="text-muted">📂 Category: {{ product.category.name }}</p>
             {% if product.brand %}
                 <p>🏷 Brand: {{ product.brand.name }}</p>
@@ -21,42 +21,67 @@
             
             {% if product.discount_percentage > 0 %}
                 <p class="mt-2">
-                    <span class="text-danger fw-bold" style="text-decoration: line-through;">
+                    <span class="text-danger fw-bold" style="text-decoration: line-through; font-size: 1.1rem;">
                         💲 ${{ product.price }}
                     </span>
-                    <span class="badge bg-danger ms-2">
+                    <span class="badge bg-danger ms-2" style="font-size: 1.1rem;">
                         {{ product.discount_percentage }}% OFF
                     </span>
                 </p>
-                <p class="fw-bold text-success fs-5">💲 Discounted Price: ${{ product.final_price }}</p>
+                <p class="fw-bold text-success fs-5" style="font-size: 1.2rem;">💲 Discounted Price: ${{ product.final_price }}</p>
             {% else %}
-                <p class="fw-bold fs-5">💲 Price: ${{ product.price }}</p>
+                <p class="fw-bold fs-5" style="font-size: 1.2rem;">💲 Price: ${{ product.price }}</p>
             {% endif %}
     
             <p class="fw-bold">
                 Stock: 
                 {% if product.stock > 0 %} 
-                    <span class="text-success">✔ In Stock</span> 
+                    <span class="text-success">✔️ In Stock</span> 
                 {% else %} 
-                    <span class="text-danger">✖ Out of Stock</span> 
+                    <span class="text-danger">✖️ Out of Stock</span> 
                 {% endif %}
             </p>
 
             <div class="d-flex flex-wrap gap-2 mt-4">
-                <form method="POST" action="{% url 'orders:add-to-cart' product.id %}">
-                    {% csrf_token %}
-                    <button type="submit" 
-                            class="btn btn-success btn-lg rounded-pill shadow" 
-                            {% if product.stock < 1 %} disabled {% endif %}>
-                        <i class="fas fa-cart-plus"></i> Add to Cart
-                    </button>
-                </form>
-                <a href="{% url 'products:product-review' product.id %}" class="btn btn-info btn-lg rounded-pill shadow">
+                {% if order_item %}
+                  
+                    <form method="POST" action="{% url 'orders:add-to-cart' product.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-lg rounded-pill shadow-lg">
+                            <i class="fas fa-plus"></i> Increase Quantity
+                        </button>
+                    </form>
+                
+                    <span class="align-self-center px-2 fs-4">{{ order_item.quantity }}</span>
+
+
+                    <form method="POST" action="{% url 'orders:remove-order-item' order.id order_item.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-lg rounded-pill shadow-lg">
+                            <i class="fas fa-minus"></i> Remove Item
+                        </button>
+                    </form>
+                {% else %}
+
+                    <form method="POST" action="{% url 'orders:add-to-cart' product.id %}">
+                        {% csrf_token %}
+                        <button type="submit" 
+                                class="btn btn-success btn-lg rounded-pill shadow-lg" 
+                                {% if product.stock < 1 %} disabled {% endif %}>
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </form>
+                {% endif %}
+                
+          
+                <a href="{% url 'products:product-review' product.id %}" class="btn btn-info btn-lg rounded-pill shadow-lg">
                     <i class="fas fa-comment-dots"></i> View Reviews
                 </a>
-                <a href="{% url 'customers:wishlist-add' product.id %}" class="btn btn-warning btn-lg rounded-pill shadow">
+
+                <a href="{% url 'customers:wishlist-add' product.id %}" class="btn btn-warning btn-lg rounded-pill shadow-lg">
                     <i class="fas fa-heart"></i> Add to Wishlist
                 </a>
+                
             </div>
         </div>
     </div>
