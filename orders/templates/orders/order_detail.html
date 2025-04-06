@@ -19,12 +19,13 @@
                 <p class="mb-1"><strong>🌆 City:</strong> {{ address.city }}</p>
                 <p class="mb-1"><strong>🏠 Street:</strong> {{ address.street }}</p>
                 <p class="mb-1"><strong>📮 Postal Code:</strong> {{ address.postal_code }}</p>
-
+                {% if order.status == 'Pending' %}
                 <div class="mt-3">
                     <a href="{% url 'customers:address-list' %}" class="btn btn-danger btn-sm">
                         <i class="fas fa-map"></i> Manage Addresses
                     </a>
                 </div>
+                {% endif %}
             </div>
             <hr class="my-3">
 
@@ -45,13 +46,14 @@
                             </div>
                         </div>
                         <span class="fw-bold text-success">{{ item.price }} 💲</span>
-                       
-                        <form action="{% url 'orders:remove-order-item' order.id item.id %}" method="post">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm rounded-pill shadow">
-                                <i class="fas fa-trash-alt"></i> Remove Item
-                            </button>
-                        </form>
+                        {% if order.status == 'Pending'%}
+                            <form action="{% url 'orders:remove-order-item' order.id item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm rounded-pill shadow">
+                                    <i class="fas fa-trash-alt"></i> Remove Item
+                                </button>
+                            </form>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>

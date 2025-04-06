@@ -2,16 +2,16 @@ from django.contrib import admin
 from .models import  Order, OrderItem, DiscountByCode
 
 
-@admin.action(description = 'تغیر وضعیت به ارسال شده')
+@admin.action(description = 'Change status to shipped')
 def make_sent(modeladmin, request, queryset):
     queryset.update(status='Shipped')
 
-@admin.action(description = 'تغیر وضعیت به درانتظار')
+@admin.action(description = 'Change status to pending')
 def make_pending(modeladmin, request, queryset):
     queryset.update(status='Pending')
 
 
-@admin.action(description = 'تغیر وضعیت به تحویل داده شده')
+@admin.action(description = 'Change status to delivered')
 def make_delivered(modeladmin, request, queryset):
     queryset.update(status='Delivered')
 
