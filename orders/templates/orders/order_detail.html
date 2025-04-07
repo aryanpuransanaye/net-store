@@ -45,7 +45,7 @@
                                 <small class="text-muted">Quantity: {{ item.quantity }}</small>
                             </div>
                         </div>
-                        <span class="fw-bold text-success">{{ item.price }} 💲</span>
+                        <span class="fw-bold text-success">{{ item.product.final_price }} 💲</span>
                         {% if order.status == 'Pending'%}
                             <form action="{% url 'orders:remove-order-item' order.id item.id %}" method="post">
                                 {% csrf_token %}
