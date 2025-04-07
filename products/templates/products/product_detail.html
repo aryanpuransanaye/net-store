@@ -45,7 +45,7 @@
             <div class="d-flex flex-wrap gap-2 mt-4">
                 {% if order_item %}
                   
-                    <form method="POST" action="{% url 'orders:add-to-cart' product.id %}">
+                    <form method="post" action="{% url 'orders:add-to-cart' product.id %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-success btn-lg rounded-pill shadow-lg">
                             <i class="fas fa-plus"></i> Increase Quantity
@@ -55,7 +55,7 @@
                     <span class="align-self-center px-2 fs-4">{{ order_item.quantity }}</span>
 
 
-                    <form method="POST" action="{% url 'orders:remove-order-item' order.id order_item.id %}">
+                    <form method="post" action="{% url 'orders:remove-order-item' order.id order_item.id %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger btn-lg rounded-pill shadow-lg">
                             <i class="fas fa-minus"></i> Remove Item

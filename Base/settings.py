@@ -1,26 +1,36 @@
-from pathlib import Path
 import os
 import pymysql
+from pathlib import Path
+from decouple import config
+
+
 pymysql.install_as_MySQLdb()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8exx56t^!ol5pv5b4x2@z7wolncy$ty08k%vse4#2*vm$%+lp-'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
 
 # Application definition
+
+
+INSTALLED_PACKAGES = [
+
+    'rest_framework',
+    'rest_framework.authtoken',                     
+]
+
 
 INSTALLED_APPS = [
 
@@ -33,14 +43,22 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
 
-    'rest_framework',
-    'rest_framework.authtoken',
+    *INSTALLED_PACKAGES,
 
     'customers',
     'products',
     'orders',
     'core',
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [],
+}
 
 
 JAZZMIN_SETTINGS = {
@@ -50,8 +68,6 @@ JAZZMIN_SETTINGS = {
     "site_brand": "🛒 Net Store",
     "welcome_sign": "Welcome to Addmin Panel",
     
-    #"site_logo": "images/logo.png"
-
     "theme": "dark",
     "primary_color": "#569854",  
     "secondary_color": "#333333",

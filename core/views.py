@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib import messages
 from customers.models import Customer
 from .forms import RegisterForm
+from rest_framework.authtoken.models import Token
 
 def login_view(request):
 
@@ -14,7 +15,8 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            messages.success(request, 'You are now logged in!')
+            Token.objects.get_or_create(user=user)
+            messages.success(request, 'You are now logged in!')            
             next_page = request.GET.get('next', reverse('products:home'))
             return redirect(next_page)
         
