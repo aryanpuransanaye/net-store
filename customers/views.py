@@ -4,6 +4,7 @@ from .models import Address, Wishlist, Customer
 from .forms import AddressForm, UpdateUserProfile
 from django.contrib.auth.decorators import login_required
 from products.models import Product
+from orders.models import Order
 
 
 @login_required
@@ -100,6 +101,13 @@ def set_active_address(request, address_id):
 
     address.is_active = True
     address.save()
+    
+    customer = request.user.customer
+    order = Order.objects.filter(customer = customer, status='Pending').first()
+
+    if order:
+        order.address = address
+        order.save()
 
     messages.success(request, "Your active address has been updated successfully!")
     return redirect('customers:address-list')

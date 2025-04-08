@@ -11,6 +11,7 @@ class Order(models.Model):
     ]
 
     customer = models.ForeignKey('customers.Customer', on_delete=models.CASCADE)
+    address = models.ForeignKey('customers.Address', on_delete=models.SET_NULL, null=True, blank=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), null=True, blank=True)
     final_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'), null=True, blank=True)
     discount_code = models.ForeignKey('DiscountByCode', null=True, blank=True, on_delete=models.SET_NULL)

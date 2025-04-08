@@ -44,14 +44,14 @@ class AddToCartView(APIView):
 
         customer = request.user.customer
 
-        addresses = Address.objects.filter(customer=customer)
+        addresses = Address.objects.filter(customer=customer, is_active=True).first()
         if not addresses:
             messages.warning(request, 'You dont have any Address, Please creat your Address.')
             return redirect('customers:address-create')
 
         product = get_object_or_404(Product, id=product_id)
 
-        order, created = Order.objects.get_or_create(customer=customer, status="Pending")
+        order, created = Order.objects.get_or_create(customer=customer, status="Pending", address=addresses)
 
         order_item, created = OrderItem.objects.get_or_create(
             order=order,
@@ -64,6 +64,8 @@ class AddToCartView(APIView):
             product.stock -= 1 
             product.save()
             order_item.save()
+        else:
+            product.stock -=1
 
         order.total_price = order.update_total_price()
         order.save()
@@ -105,10 +107,8 @@ class RemoveOrderItemView(APIView):
     permission_classes = [IsAuthenticated]
     
     def post(self, request, order_id, item_id):
-       
         order = get_object_or_404(Order, id=order_id, customer=request.user.customer, status="Pending")
         item = get_object_or_404(OrderItem, id=item_id, order=order)
-
         product = item.product
 
         if item.quantity > 1:
@@ -119,6 +119,7 @@ class RemoveOrderItemView(APIView):
             product.save()
 
             message = f"One {item.product.name} has been removed from your Cart."
+
         elif item.quantity == 1:
             item.delete()
             message = f"{item.product.name} has been deleted successfully."
@@ -126,20 +127,32 @@ class RemoveOrderItemView(APIView):
         if not order.items.exists():
             order.delete()
             message += " Your order has been completely removed as it had no items."
+            
+            if 'text/html' in request.META.get('HTTP_ACCEPT', ''):
+                messages.success(request, message)
+                previous_url = request.META.get('HTTP_REFERER', '/')
+                return redirect(previous_url)
+            else:
+                return Response({
+                    "message": message,
+                    "order_items": []
+                })
+
         else:
             order.total_price = order.update_total_price()
             order.save()
+            order_items = OrderItem.objects.filter(order=order)
+            order_items_data = OrderItemSerializer(order_items, many=True).data
 
-
-        if 'text/html' in request.META.get('HTTP_ACCEPT', ''):
-            previous_url = request.META.get('HTTP_REFERER', '/')
-            return redirect(previous_url)
-        else:
-            remove_order_items_data = OrderItemSerializer(order, many=True).data
-            return Response({
-            "message": "Order has been successfully removed.",
-            "order_items": remove_order_items_data})
-        
+            if 'text/html' in request.META.get('HTTP_ACCEPT', ''):
+                previous_url = request.META.get('HTTP_REFERER', '/')
+                messages.success(request, message)
+                return redirect(previous_url)
+            else:
+                return Response({
+                    "message": message,
+                    "order_items": order_items_data
+                })
 
 class ApplyDiscountView(APIView):
     permission_classes = [IsAuthenticated]
