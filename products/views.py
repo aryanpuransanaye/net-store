@@ -12,7 +12,6 @@ from orders.models import OrderItem, Order
 from django.contrib.auth.decorators import login_required
 
 
-
 def home(request):
 
     products_list = Product.objects.all().order_by('id')

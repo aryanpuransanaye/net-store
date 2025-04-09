@@ -32,6 +32,7 @@ def customer_profile(request):
     
     return render(request, 'customers/customer_profile.html', context)
 
+@login_required
 def edit_customer_profile(request):
 
     user = request.user
@@ -48,6 +49,7 @@ def edit_customer_profile(request):
 
     return render(request, 'customers/edit_profile.html', {'form': form})
 
+@login_required
 def address_list(request):
 
     customer = request.user.customer
@@ -55,6 +57,7 @@ def address_list(request):
     return render(request, 'customers/address_list.html', {'addresses': addresses})
 
 
+@login_required
 def address_create(request):
 
     if request.method == 'POST':
@@ -69,6 +72,7 @@ def address_create(request):
     return render(request, 'customers/address_create.html', {'form': form})
 
 
+@login_required
 def edit_address(request, address_id):
 
     address = get_object_or_404(Address, id=address_id, customer=request.user.customer)
@@ -85,6 +89,7 @@ def edit_address(request, address_id):
     return render(request, 'customers/edit_address.html', {'form': form})
 
 
+@login_required
 def delete_address(request, address_id):
 
     address = get_object_or_404(Address, id=address_id, customer=request.user.customer)
@@ -93,6 +98,7 @@ def delete_address(request, address_id):
 
     return redirect('customers:address-list')  
 
+@login_required
 def set_active_address(request, address_id):
 
     address = get_object_or_404(Address, id = address_id, customer = request.user.customer)
@@ -113,6 +119,7 @@ def set_active_address(request, address_id):
     return redirect('customers:address-list')
 
 
+@login_required
 def wishlist_list(request):
     
     customer = request.user.customer
@@ -125,6 +132,7 @@ def wishlist_list(request):
     return render(request, 'customers/wishlist_list.html', {'wishlist': wishlist})
 
 
+@login_required
 def remove_from_wishlist(request, product_id):
 
     product = get_object_or_404(Product, id=product_id)
@@ -134,6 +142,7 @@ def remove_from_wishlist(request, product_id):
     messages.success(request, f"✅ {product.name} removed from your wishlist.")
     
     return redirect('customers:wishlist-list')
+
 
 @login_required
 def wishlist_add(request, product_id):
@@ -147,7 +156,7 @@ def wishlist_add(request, product_id):
 
     return redirect('customers:wishlist-list')
 
-
+@login_required
 def product_select(request):
 
     all_products = Product.objects.all()
