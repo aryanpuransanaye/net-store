@@ -54,7 +54,7 @@ def home(request):
         if valid_discounts.exists():
             latest_discount = valid_discounts.order_by('-start_date').first()
             discount_amount = Decimal(str(latest_discount.discount_percentage)) / Decimal('100')
-            product.final_price = product.price * (Decimal('1') - discount_amount)
+            product.final_price = (product.price * (Decimal('1') - discount_amount)).quantize(Decimal('0.01'))
             product.discount_percentage = latest_discount.discount_percentage
         else:
             product.final_price = product.price
