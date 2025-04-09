@@ -69,7 +69,7 @@ def home(request):
 
     return render(request, 'products/home.html', {
         'products_list': products_list,
-        'products_count': products_count,
+        #'products_count': products_count,
         'page_obj': page_obj,
         'categories': categories,
         'brands': brands,
@@ -78,6 +78,7 @@ def home(request):
         'price_filter': price_filter,
         'rating_filter': rating_filter,
     })
+
 
 def search_product(request):
     
@@ -119,6 +120,7 @@ def product_detail(request, product_id):
         })
 
 
+@login_required
 def product_review(request, product_id):
 
     product = get_object_or_404(Product, id = product_id)
