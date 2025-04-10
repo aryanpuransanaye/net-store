@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 def home(request):
 
     products_list = Product.objects.all().order_by('id')
-    products_count = products_list.count()
+    
     categories = Category.objects.all()
     brands = Brand.objects.all()
 
@@ -69,7 +69,6 @@ def home(request):
 
     return render(request, 'products/home.html', {
         'products_list': products_list,
-        #'products_count': products_count,
         'page_obj': page_obj,
         'categories': categories,
         'brands': brands,
